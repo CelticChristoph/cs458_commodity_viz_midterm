@@ -28,15 +28,18 @@ function dispCommData(d) {
     var commodity = d;
 
     d3.csv("./data/faf_commodity_data_dom_only.csv", function(faf_data) {
+        // Pulls out sum weight of specific good from State given commodity code
+        // Data returned in freight_totals in a list with indexes of {dms_orig, sum(tons_2015)}
         var freight_totals = d3.nest()
             .key(function(d) { 
-                if ( d.dms_orig != d.dms_dest ) {
-                    return d.dms_orig; 
+                // Validate that origin and destination are not the same and commodity code matches
+                if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
+                    return d.dms_orig;
                 }})
-            .key(function(d) { return d.sctg2; })
+            // Sums up tons_2015 for a specific good in a specific origin state
             .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015; }); })
             .entries(faf_data);
-        console.log(JSON.stringify(freight_totals));
+        console.log(freight_totals);
     });
         
 }
