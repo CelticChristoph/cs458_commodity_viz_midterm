@@ -96,7 +96,7 @@ function dispCommData(d) {
                 .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
                 .attr("x", function(d) { return x(Math.min(0, d.values)); })
                 .attr("y", function(d) { return y(d.key); })
-                .attr("width", function(d) { return Math.abs(x(d.values)); })
+                .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
                 .attr("height", y.rangeBand());
 
             svg.append("g")
