@@ -46,7 +46,7 @@ function dispCommData(d) {
         .tickSize(0)
         .tickPadding(6);
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#data_div").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
