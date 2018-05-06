@@ -26,6 +26,12 @@ function dispCommData(d) {
     console.log(d);
     var commodity = d;
 
+    var pre_svg = d3.select("#data_div").select("#comm_data_bar")
+
+    if(typeof pre_svg !== "undefined" || pre_svg !== null) {
+      pre_svg.remove();
+    }
+
     var margin = {top: 20, right: 30, bottom: 40, left: 30},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -49,6 +55,8 @@ function dispCommData(d) {
     var svg = d3.select("#data_div").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .attr("class", "data bar_chart")
+        .attr("id", "comm_data_bar")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
