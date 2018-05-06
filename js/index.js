@@ -94,7 +94,7 @@ function dispCommData(d) {
             .attr("x", function(d) { return x(d.values); })
             .attr("y", function(d) { return y(d.key); })
             .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
-            .attr("height", y.rangeBand());
+            .attr("height", y.rangeBand() / Object.keys(export_totals).length);
 
       svg.append("g")
             .attr("class", "x axis")
