@@ -91,9 +91,9 @@ function dispCommData(d) {
             .data(export_totals)
             .enter().append("rect")
             .attr("class", function(d) { return "bar bar--" + (export_totals.values < 0 ? "negative" : "positive"); })
-            .attr("x", function(d) { return x(Math.min(0, export_totals.values)); })
-            .attr("y", function(d) { return y(export_totals.key); })
-            .attr("width", d3.max(export_totals, function(d) {return d.values}))
+            .attr("x", function(d) { return x(d.values); })
+            .attr("y", function(d) { return y(d.key); })
+            .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
             .attr("height", y.rangeBand());
 
       svg.append("g")
