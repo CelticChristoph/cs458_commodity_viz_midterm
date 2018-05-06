@@ -1,4 +1,4 @@
-d3.csv("./data/commodity_types.csv", function (error1, com_data) {
+d3.csv("./data/commodity_types.csv", function (error, com_data) {
     var select = d3.select("#comm_data_drop_div")
         .append("select")
         .attr("id", "comm_data_drop_menu")
@@ -20,6 +20,8 @@ d3.csv("./data/commodity_types.csv", function (error1, com_data) {
             return d.context;
         })
         .attr("class", "drop_item");
+
+        dispCommData(d3.select("#comm_data_drop_menu").property("value"));
 });
 
 function dispCommData(d) {
@@ -32,10 +34,7 @@ function dispCommData(d) {
       pre_svg.remove();
     }
 
-    
-    
-
-    var margin = {top: 10, right: 10, bottom: 10, left: 20},
+    var margin = {top: 10, right: 20, bottom: 10, left: 20},
     width = (document.getElementById("data_div").offsetWidth) - margin.left - margin.right,
     height = (document.getElementById("data_div").offsetHeight) - margin.top - margin.bottom;
 
@@ -61,6 +60,7 @@ function dispCommData(d) {
         .attr("class", "data bar_chart")
         .attr("id", "comm_data_bar")
         .attr("viewbox", "0 0 1000 1000")
+        .attr("preserveAspectRatio", "xMinYMin meet")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
@@ -114,6 +114,7 @@ function dispCommData(d) {
             svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + height + ")")
+                .attr("class", "bar_text")
                 .call(xAxis);
 
             svg.append("g")
@@ -123,3 +124,8 @@ function dispCommData(d) {
         });
     });
 }
+
+d3.select(window)
+  .on("resize", function() {
+    dispCommData(d3.select("#comm_data_drop_menu").property("value"));
+  });

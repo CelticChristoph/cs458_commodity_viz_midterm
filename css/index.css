@@ -1,9 +1,9 @@
 .bar_positive {
-	fill: blue;
+	fill: cornflowerblue;
 }
 
 .bar_negative {
-	fill: red;
+	fill: firebrick;
 }
 
 .bar_net {
@@ -96,13 +96,14 @@ html, body {
 }
 
 .toolbar_item{
-	background: lightskyblue;
+	background: cornflowerblue;
 
 	padding: 1vh;
 }
 
 #comm_data_drop_menu{
 	font-family: 'Comfortaa', cursive;
+	font-size: 12;
 }
 
 .data_container{
@@ -121,7 +122,6 @@ html, body {
 
 .data{
 	background: #555;
-
 	height: 100%;
 	width: 100%;
 
@@ -132,7 +132,7 @@ html, body {
 
 #comm_data_bar{
 	justify-content: center;
-	background: #fff;
+	background: lightgray;
 }
 
 .box {
@@ -155,4 +155,13 @@ html, body {
 	-webkit-box-shadow: rgba(0,0,0,0.2) 0px 1px 3px;
 	-moz-box-shadow: rgba(0,0,0,0.2) 0px 1px 3px;
 	box-shadow: rgba(0,0,0,0.2) 0px 1px 3px;
+}
+
+text{
+	font-family: 'Comfortaa', cursive;
+	font-size: 10;
+}
+
+.text_box{
+	font-family: 'Comfortaa', cursive;
 }
