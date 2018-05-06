@@ -46,7 +46,7 @@ function dispCommData(d) {
         .tickSize(0)
         .tickPadding(6);
 
-    var svg = d3.select("data_div").append("svg")
+    var svg = d3.select("#data_div").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -64,6 +64,7 @@ function dispCommData(d) {
             // Sums up tons_2015 for a specific good in a specific origin state
             .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015; }); })
             .entries(faf_data);
+        export_totals.pop();
         console.log(export_totals);
         var import_totals = d3.nest()
             .key(function(d) { 
@@ -74,7 +75,10 @@ function dispCommData(d) {
             // Sums up tons_2015 for a specific good in a specific destination state
             .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015 * -1; }); })
             .entries(faf_data);
+        import_totals.pop();
         console.log(import_totals);
+
+        
 
         x.domain([d3.min(import_totals, function(d) {return d.values}), d3.max(export_totals, function(d) {return d.values})]);
         if(Object.keys(export_totals).length > Object.keys(import_totals).length){
@@ -84,12 +88,12 @@ function dispCommData(d) {
         }
 
         svg.selectAll(".bar")
-            .data(faf_data)
-        .enter().append("rect")
-            .attr("class", function(d) { return "bar bar--" + (export_totals.value < 0 ? "negative" : "positive"); })
-            .attr("x", function(d) { return x(Math.min(0, export_totals.value)); })
+            .data(export_totals)
+            .enter().append("rect")
+            .attr("class", function(d) { return "bar bar--" + (export_totals.values < 0 ? "negative" : "positive"); })
+            .attr("x", function(d) { return x(Math.min(0, export_totals.values)); })
             .attr("y", function(d) { return y(export_totals.key); })
-            .attr("width", function(d) { return Math.abs(x(export_totals.value) - x(0)); })
+            .attr("width", d3.max(export_totals, function(d) {return d.values}))
             .attr("height", y.rangeBand());
 
       svg.append("g")
