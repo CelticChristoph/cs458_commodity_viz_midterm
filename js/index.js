@@ -20,8 +20,6 @@ d3.csv("./data/commodity_types.csv", function (error1, com_data) {
             return d.context;
         })
         .attr("class", "drop_item");
-
-
 });
 
 function dispCommData(d) {
