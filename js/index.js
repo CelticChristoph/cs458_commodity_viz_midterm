@@ -1,7 +1,7 @@
 d3.csv("./data/commodity_types.csv", function (error1, com_data) {
-    var select = d3.select("body")
-        .append("div")
+    var select = d3.select("#comm_data_drop_div")
         .append("select")
+        .attr("id", "comm_data_drop_menu")
 
     select
         .on("change", function (d) {
@@ -18,7 +18,8 @@ d3.csv("./data/commodity_types.csv", function (error1, com_data) {
         })
         .text(function (d) {
             return d.context;
-        });
+        })
+        .attr("class", "drop_item");
 
 
 });

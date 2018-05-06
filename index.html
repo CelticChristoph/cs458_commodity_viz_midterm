@@ -3,12 +3,40 @@
 <head>
   <meta charset="utf-8">
   <title>CS458 Commodity Data Project</title>
+  <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
   <link rel="stylesheet" href="./css/index.css">
+
+  <script src="http://d3js.org/d3.v3.js"></script>
 </head>
 
 <body>
-  <script src="http://d3js.org/d3.v3.js"></script>
-  <script src="./js/index.js"/></script>
+  <div class="main">
+
+    <div class="page_container box" id="main_container">
+
+      <div class="box" id="page_title">Commodity Data</div>
+
+      <div class="content_container" id="main_data_container">
+
+        <div class="toolbar_container box" id="main_toolbar">
+          <div class="toolbar_item box_last" id="comm_data_drop_container">
+            <div>Pick the commodity you'd like to view: </div>
+            <div id="comm_data_drop_div"></div>
+            <!-- D3 select-box here "comm_data_drop_menu" -->
+          </div>
+        </div>
+
+        <div class="data_container box_last">
+          <div class="data" id="data_div">
+            Hello
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script src="./js/index.js" /></script>
 </body>
 
 </html>
