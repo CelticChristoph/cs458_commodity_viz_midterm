@@ -32,9 +32,12 @@ function dispCommData(d) {
       pre_svg.remove();
     }
 
-    var margin = {top: 20, right: 30, bottom: 40, left: 30},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    
+    
+
+    var margin = {top: 10, right: 10, bottom: 10, left: 20},
+    width = (document.getElementById("data_div").offsetWidth) - margin.left - margin.right,
+    height = (document.getElementById("data_div").offsetHeight) - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
         .range([0, width]);
@@ -57,8 +60,9 @@ function dispCommData(d) {
         .attr("height", height + margin.top + margin.bottom)
         .attr("class", "data bar_chart")
         .attr("id", "comm_data_bar")
+        .attr("viewbox", "0 0 1000 1000")
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
     d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
         var export_totals = d3.nest()

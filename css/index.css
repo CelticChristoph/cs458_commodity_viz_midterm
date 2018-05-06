@@ -123,13 +123,16 @@ html, body {
 	background: #555;
 
 	height: 100%;
+	width: 100%;
 
-	padding: 1vh;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-#graph{
-	width: 100%;
-	height: 100%;
+#comm_data_bar{
+	justify-content: center;
+	background: #fff;
 }
 
 .box {
