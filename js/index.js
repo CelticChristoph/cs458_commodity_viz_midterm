@@ -57,7 +57,7 @@ d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
       .key(function(d) { 
           // Validate that origin and destination are not the same and commodity code matches
           // Commodity is hardcoded for testing purposes
-          if ( d.dms_orig != d.dms_dest && d.sctg2 == 1) {
+          if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
               return d.dms_orig;
           }})
       // Sums up tons_2015 for a specific good in a specific origin state
