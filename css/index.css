@@ -1,12 +1,12 @@
-.bar--positive {
+.bar_positive {
 	fill: blue;
 }
 
-.bar--negative {
+.bar_negative {
 	fill: red;
 }
 
-.bar--net {
+.bar_net {
 	fill: purple;
 }
 
@@ -120,11 +120,16 @@ html, body {
 }
 
 .data{
-	background: red;
+	background: #555;
 
 	height: 100%;
 
 	padding: 1vh;
+}
+
+#graph{
+	width: 100%;
+	height: 100%;
 }
 
 .box {

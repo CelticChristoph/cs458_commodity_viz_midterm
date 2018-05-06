@@ -46,9 +46,10 @@ function dispCommData(d) {
         .tickSize(0)
         .tickPadding(6);
 
+    d3.select("#data_div").select("svg").remove();
+
     var svg = d3.select("#data_div").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("id", "graph")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -80,7 +81,10 @@ function dispCommData(d) {
 
         
 
-        x.domain([d3.min(import_totals, function(d) {return d.values}), d3.max(export_totals, function(d) {return d.values})]);
+        x.domain([
+            d3.min(import_totals, function(d) {return d.values}),
+            d3.max(export_totals, function(d) {return d.values})
+        ]);
         if(Object.keys(export_totals).length > Object.keys(import_totals).length){
             y.domain(export_totals.map(function(d) { return export_totals.key; }));
         } else {
@@ -90,7 +94,7 @@ function dispCommData(d) {
         svg.selectAll(".bar")
             .data(export_totals)
             .enter().append("rect")
-            .attr("class", function(d) { return "bar bar--" + (export_totals.values < 0 ? "negative" : "positive"); })
+            .attr("class", function(d) { return "bar bar_" + (export_totals.values < 0 ? "negative" : "positive"); })
             .attr("x", function(d) { return x(d.values); })
             .attr("y", function(d) { return y(d.key); })
             .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
