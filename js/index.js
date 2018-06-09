@@ -69,11 +69,11 @@ function dispCommData(d) {
     	data.forEach(function(d){
     		state_data[d.state] = [d.context];
     	});
-    	console.log(state_data);
+    	// console.log(state_data);
 
 	    d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
 	        var export_totals = d3.nest()
-	            .key(function(d) { 
+	            .key(function(d) {
 	                // Validate that origin and destination are not the same and commodity code matches
 	                // Commodity is hardcoded for testing purposes
 	                // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
@@ -89,7 +89,7 @@ function dispCommData(d) {
 	        var import_totals
 	        d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
 	            var import_totals = d3.nest()
-	                .key(function(d) { 
+	                .key(function(d) {
 	                    // Validate that origin and destination are not the same and commodity code matches
 	                    // Commodity is hardcoded for testing purposes
 	                    // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
@@ -110,26 +110,19 @@ function dispCommData(d) {
 
 	            var combined = export_totals.concat(import_totals);
 
-	            svg.selectAll(".bar")
-	                .data(combined)
-	                .enter()
-	                .append("rect")
-	                .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
-	                .attr("x", function(d) { return x(Math.min(0, d.values)); })
-	                .attr("y", function(d) { return y(d.key); })
-	                .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
-	                .attr("height", y.rangeBand());
-
-	            svg.append("g")
-	                .attr("class", "x axis")
-	                .attr("transform", "translate(0," + height + ")")
-	                .attr("class", "bar_text")
-	                .call(xAxis);
-
-	            svg.append("g")
-	                .attr("class", "y axis")
-	                .attr("transform", "translate(" + x(0) + ",0)")
-	                .call(yAxis);
+              svg.selectAll("circle")
+                  .data(combined)
+                  .enter()
+                  .append("circle")
+                  .attr("transform", function (d, i) {
+                      return "translate(" + i * 30 + ")"
+                  })
+                  .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
+                  .attr("cy", function(d, i) {
+                      return 100 + i * 30;
+                  })
+                  .attr("cx", function(d, i) { return i * 30; })
+                  .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
 	        });
 	    });
 	});

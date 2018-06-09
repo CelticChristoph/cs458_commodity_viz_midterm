@@ -1,9 +1,11 @@
 .bar_positive {
 	fill: cornflowerblue;
+	opacity: 0.6;
 }
 
 .bar_negative {
 	fill: firebrick;
+	opacity: 0.6;
 }
 
 .bar_net {
@@ -51,13 +53,13 @@ html, body {
 	flex-direction: column;
 
 	padding: 1vh;
-	
+
 	height: 98vh;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-	
+
 	text-align: center;
 }
 
