@@ -1,7 +1,7 @@
 d3.csv("./data/commodity_types.csv", function (error, com_data) {
     var select = d3.select("#comm_data_drop_div")
         .append("select")
-        .attr("id", "comm_data_drop_menu")
+        .attr("id", "comm_data_drop_menu");
 
     select
         .on("change", function (d) {
@@ -38,22 +38,6 @@ function dispCommData(d) {
     width = (document.getElementById("data_div").offsetWidth) - margin.left - margin.right,
     height = (document.getElementById("data_div").offsetHeight) - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
-        .range([0, width]);
-
-    var y = d3.scale.ordinal()
-        .rangeRoundBands([0, height], 0.1);
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickSize(0)
-        .tickPadding(6);
-
     var svg = d3.select("#data_div").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -64,12 +48,31 @@ function dispCommData(d) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
+    var grid = [];
+    var x_pos = 50;
+    var y_pos = 50;
+    var count = 0;
+    
+    while (count < 51){
+        grid[count] = [x_pos, y_pos];
+        if (x_pos + 100 > width){
+            x_pos = 50;
+            y_pos += 100;
+        } else {
+            x_pos += 100;
+        }
+        count += 1;
+    }
+
+    console.log(grid);
+    console.log(grid[0]);
+    
     d3.csv("../data/state_data.csv", function(error, data){
-    	var state_data = {};
-    	data.forEach(function(d){
-    		state_data[d.state] = [d.context];
-    	});
-    	// console.log(state_data);
+        var state_data = {};
+        data.forEach(function(d){
+            state_data[d.state] = [d.context];
+        });
+        // console.log(state_data);
 
 	    d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
 	        var export_totals = d3.nest()
@@ -103,26 +106,19 @@ function dispCommData(d) {
 	            import_totals.pop();
 	            // console.log(import_totals);
 
-	            x.domain([d3.min(import_totals, function(d) { return d.values; }), d3.max(export_totals, function(d) { return d.values; })]).nice();
-	            y.domain(data.map(function(d) { return d.dms_orig; }));
 	            // console.log(d3.min(import_totals, function(d) { return d.values; }));
 	            // console.log(d3.max(export_totals, function(d) { return d.values; }));
 
 	            var combined = export_totals.concat(import_totals);
 
-              svg.selectAll("circle")
-                  .data(combined)
-                  .enter()
-                  .append("circle")
-                  .attr("transform", function (d, i) {
-                      return "translate(" + i * 30 + ")"
-                  })
-                  .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
-                  .attr("cy", function(d, i) {
-                      return 100 + i * 30;
-                  })
-                  .attr("cx", function(d, i) { return i * 30; })
-                  .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
+                svg.selectAll("circle")
+                    .data(combined)
+                    .enter()
+                    .append("circle")
+                    .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
+                    .attr("cy", function(d, i) { return grid[i % 51][1]; })
+                    .attr("cx", function(d, i) { return grid[i % 51][0]; })
+                    .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
 	        });
 	    });
 	});
@@ -130,5 +126,5 @@ function dispCommData(d) {
 
 d3.select(window)
   .on("resize", function() {
-    dispCommData(d3.select("#comm_data_drop_menu").property("value"));
+      dispCommData(d3.select("#comm_data_drop_menu").property("value"));
   });
