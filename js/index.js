@@ -67,7 +67,7 @@ function dispCommData(d) {
     d3.csv("./data/state_data.csv", function(error, data){
 
         data.forEach(function(d){
-            combined.push([[d.state, d.context], [0.0, 0.0, 0.0]]);   // [exports, imports, intrastate]
+            combined.push({state_num: d.state, state_name: d.context, export_total: 0.0, import_total: 0.0, intrastate_total: 0.0});
             lookup.push(d.state);
         });
     });
@@ -76,25 +76,36 @@ function dispCommData(d) {
         data.forEach(function(d){
             if(d.sctg2 == commodity){
                 if(d.dms_orig != d.dms_dest){
-                    combined[lookup.indexOf(d.dms_orig)][1][0] += Number(d.tons_2015);
-                    combined[lookup.indexOf(d.dms_dest)][1][1] += Number(d.tons_2015);
+                    combined[lookup.indexOf(d.dms_orig)].export_total += Number(d.tons_2015);
+                    combined[lookup.indexOf(d.dms_dest)].import_total += Number(d.tons_2015);
                 } else {
-                    combined[lookup.indexOf(d.dms_orig)][1][2] += Number(d.tons_2015);
+                    combined[lookup.indexOf(d.dms_orig)].intrastate_total += Number(d.tons_2015);
                 }
             }
         });
-    });
 
-    svg.selectAll("circle")
-        .data(combined)
-        .enter()
-        .append("circle")
-        .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
-        .attr("cy", function(d, i) { return grid[i % 51][1]; })
-        .attr("cx", function(d, i) { return grid[i % 51][0]; })
-        .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
-    
-    console.log(combined);
+        svg.selectAll("circle_pos")
+            .data(combined)
+            .enter()
+            .append("circle")
+            .attr("class", "bar bar_positive")
+            .attr("cy", function(d, i) { return grid[i][1]; })
+            .attr("cx", function(d, i) { return grid[i][0]; })
+            .attr("r", function(d) { return Math.sqrt(d.export_total / 10); });
+        
+        svg.selectAll("circle_neg")
+            .data(combined)
+            .enter()
+            .append("circle")
+            .attr("class", "bar bar_negative")
+            .attr("cy", function(d, i) { return grid[i][1]; })
+            .attr("cx", function(d, i) { return grid[i][0]; })
+            .attr("r", function(d) { return Math.sqrt(d.import_total / 10); });
+
+        // svg.append("text")
+        //   .style("text-anchor", "middle")
+        //   .text(function(d) { return d.state_name; });
+    });
 }
 
 d3.select(window)
