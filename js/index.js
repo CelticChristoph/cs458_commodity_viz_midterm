@@ -44,9 +44,6 @@ function dispCommData(d) {
         .attr("class", "data bar_chart")
         .attr("id", "comm_data_bar")
         .attr("viewbox", "0 0 1000 1000")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + 0 + ")");
 
     var grid = [];
     var x_pos = 50;
@@ -64,64 +61,40 @@ function dispCommData(d) {
         count += 1;
     }
 
-    console.log(grid);
-    console.log(grid[0]);
-    
+    var combined = [];
+    var lookup = [];
+
     d3.csv("./data/state_data.csv", function(error, data){
-        var state_data = {};
+
         data.forEach(function(d){
-            state_data[d.state] = [d.context];
+            combined.push([[d.state, d.context], [0.0, 0.0, 0.0]]);   // [exports, imports, intrastate]
+            lookup.push(d.state);
         });
-        // console.log(state_data);
+    });
 
-	    d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
-	        var export_totals = d3.nest()
-	            .key(function(d) {
-	                // Validate that origin and destination are not the same and commodity code matches
-	                // Commodity is hardcoded for testing purposes
-	                // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
-	                if (d.sctg2 == commodity) {
-	                    return d.dms_orig;
-	                }
-	            })
-	            // Sums up tons_2015 for a specific good in a specific origin state
-	            .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015; }); })
-	            .entries(data);
-	        export_totals.pop();
-	        // console.log(export_totals);
-	        var import_totals
-	        d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
-	            var import_totals = d3.nest()
-	                .key(function(d) {
-	                    // Validate that origin and destination are not the same and commodity code matches
-	                    // Commodity is hardcoded for testing purposes
-	                    // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
-	                    if (d.sctg2 == commodity) {
-	                        return d.dms_dest;
-	                    }
-	                })
-	                // Sums up tons_2015 for a specific good in a specific origin state
-	                .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015 * -1; }); })
-	                .entries(data);
-	            import_totals.pop();
-	            // console.log(import_totals);
+    d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
+        data.forEach(function(d){
+            if(d.sctg2 == commodity){
+                if(d.dms_orig != d.dms_dest){
+                    combined[lookup.indexOf(d.dms_orig)][1][0] += Number(d.tons_2015);
+                    combined[lookup.indexOf(d.dms_dest)][1][1] += Number(d.tons_2015);
+                } else {
+                    combined[lookup.indexOf(d.dms_orig)][1][2] += Number(d.tons_2015);
+                }
+            }
+        });
+    });
 
-	            // console.log(d3.min(import_totals, function(d) { return d.values; }));
-	            // console.log(d3.max(export_totals, function(d) { return d.values; }));
-
-	            var combined = export_totals.concat(import_totals);
-
-                svg.selectAll("circle")
-                    .data(combined)
-                    .enter()
-                    .append("circle")
-                    .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
-                    .attr("cy", function(d, i) { return grid[i % 51][1]; })
-                    .attr("cx", function(d, i) { return grid[i % 51][0]; })
-                    .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
-	        });
-	    });
-	});
+    svg.selectAll("circle")
+        .data(combined)
+        .enter()
+        .append("circle")
+        .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
+        .attr("cy", function(d, i) { return grid[i % 51][1]; })
+        .attr("cx", function(d, i) { return grid[i % 51][0]; })
+        .attr("r", function(d) {return Math.sqrt(Math.abs(d.values)); });
+    
+    console.log(combined);
 }
 
 d3.select(window)
