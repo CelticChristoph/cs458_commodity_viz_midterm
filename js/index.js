@@ -67,14 +67,14 @@ function dispCommData(d) {
     console.log(grid);
     console.log(grid[0]);
     
-    d3.csv("../data/state_data.csv", function(error, data){
+    d3.csv("./data/state_data.csv", function(error, data){
         var state_data = {};
         data.forEach(function(d){
             state_data[d.state] = [d.context];
         });
         // console.log(state_data);
 
-	    d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
+	    d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
 	        var export_totals = d3.nest()
 	            .key(function(d) {
 	                // Validate that origin and destination are not the same and commodity code matches
@@ -90,7 +90,7 @@ function dispCommData(d) {
 	        export_totals.pop();
 	        // console.log(export_totals);
 	        var import_totals
-	        d3.csv("../data/faf_commodity_data_dom_only.csv", function(error, data) {
+	        d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
 	            var import_totals = d3.nest()
 	                .key(function(d) {
 	                    // Validate that origin and destination are not the same and commodity code matches
