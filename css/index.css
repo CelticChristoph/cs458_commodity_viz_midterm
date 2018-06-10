@@ -8,19 +8,10 @@
 	opacity: 0.6;
 }
 
-.bar_net {
-	fill: purple;
-}
-
-.axis text {
-	font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-	fill: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
+.states {
+	fill: #e5e5e5;
+	stroke: #fff;
+	stroke-width:2px;
 }
 
 html, body {

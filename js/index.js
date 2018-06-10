@@ -44,31 +44,32 @@ function dispCommData(d) {
         .attr("class", "data bar_chart")
         .attr("id", "comm_data_bar")
         .attr("viewbox", "0 0 1000 1000")
+     
+    var projection = d3.geo.albersUsa()
+            .scale(1000)
+            .translate([width / 2, height / 2])
+ 
+    var path = d3.geo.path()
+        .projection(projection);
 
-    var grid = [];
-    var x_pos = 50;
-    var y_pos = 50;
-    var count = 0;
-    
-    while (count < 51){
-        grid[count] = [x_pos, y_pos];
-        if (x_pos + 100 > width){
-            x_pos = 50;
-            y_pos += 100;
-        } else {
-            x_pos += 100;
-        }
-        count += 1;
-    }
+    d3.json('./data/us.json', function(error, us) {
+        svg.selectAll('.states')
+            .data(topojson.feature(us, us.objects.usStates).features)
+            .enter()
+            .append('path')
+            .attr('class', 'states')
+            .attr('d', path)
+    });
 
     var combined = [];
     var lookup = [];
+    var positions = [];
 
     d3.csv("./data/state_data.csv", function(error, data){
-
         data.forEach(function(d){
             combined.push({state_num: d.state, state_name: d.context, export_total: 0.0, import_total: 0.0, intrastate_total: 0.0});
             lookup.push(d.state);
+            positions.push(projection([d.longitude, d.latitude]));
         });
     });
 
@@ -89,8 +90,8 @@ function dispCommData(d) {
             .enter()
             .append("circle")
             .attr("class", "bar bar_positive")
-            .attr("cy", function(d, i) { return grid[i][1]; })
-            .attr("cx", function(d, i) { return grid[i][0]; })
+            .attr("cx", function(d, i) { return positions[i][0]; })
+            .attr("cy", function(d, i) { return positions[i][1]; })
             .attr("r", function(d) { return Math.sqrt(d.export_total / 10); });
         
         svg.selectAll("circle_neg")
@@ -98,13 +99,9 @@ function dispCommData(d) {
             .enter()
             .append("circle")
             .attr("class", "bar bar_negative")
-            .attr("cy", function(d, i) { return grid[i][1]; })
-            .attr("cx", function(d, i) { return grid[i][0]; })
+            .attr("cx", function(d, i) { return positions[i][0]; })
+            .attr("cy", function(d, i) { return positions[i][1]; })
             .attr("r", function(d) { return Math.sqrt(d.import_total / 10); });
-
-        // svg.append("text")
-        //   .style("text-anchor", "middle")
-        //   .text(function(d) { return d.state_name; });
     });
 }
 
