@@ -92,7 +92,7 @@ function dispCommData(d) {
             .attr("class", "bar bar_positive")
             .attr("cx", function(d, i) { return positions[i][0]; })
             .attr("cy", function(d, i) { return positions[i][1]; })
-            .attr("r", function(d) { return Math.sqrt(d.export_total / 10); });
+            .attr("r", function(d) { return Math.sqrt(d.export_total / 15); });
         
         svg.selectAll("circle_neg")
             .data(combined)
@@ -101,7 +101,7 @@ function dispCommData(d) {
             .attr("class", "bar bar_negative")
             .attr("cx", function(d, i) { return positions[i][0]; })
             .attr("cy", function(d, i) { return positions[i][1]; })
-            .attr("r", function(d) { return Math.sqrt(d.import_total / 10); });
+            .attr("r", function(d) { return Math.sqrt(d.import_total / 15); });
     });
 }
 
