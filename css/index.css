@@ -10,8 +10,12 @@
 
 .states {
 	fill: #e5e5e5;
-	stroke: #fff;
 	stroke-width:2px;
+}
+
+.states:hover {
+	fill: antiquewhite;
+	stroke: #000;
 }
 
 html, body {
@@ -157,4 +161,17 @@ text{
 
 .text_box{
 	font-family: 'Comfortaa', cursive;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    /* width: 150px;					
+    height: 70px;					 */
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 3px;			
+    pointer-events: none;			
 }
