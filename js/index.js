@@ -1,7 +1,7 @@
 d3.csv("./data/commodity_types.csv", function (error, com_data) {
     var select = d3.select("#comm_data_drop_div")
         .append("select")
-        .attr("id", "comm_data_drop_menu")
+        .attr("id", "comm_data_drop_menu");
 
     select
         .on("change", function (d) {
@@ -38,96 +38,74 @@ function dispCommData(d) {
     width = (document.getElementById("data_div").offsetWidth) - margin.left - margin.right,
     height = (document.getElementById("data_div").offsetHeight) - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
-        .range([0, width]);
-
-    var y = d3.scale.ordinal()
-        .rangeRoundBands([0, height], 0.1);
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickSize(0)
-        .tickPadding(6);
-
     var svg = d3.select("#data_div").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("class", "data bar_chart")
         .attr("id", "comm_data_bar")
         .attr("viewbox", "0 0 1000 1000")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + 0 + ")");
+     
+    var projection = d3.geo.albersUsa()
+            .scale(1000)
+            .translate([width / 2, height / 2])
+ 
+    var path = d3.geo.path()
+        .projection(projection);
 
-	    d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
-	        var export_totals = d3.nest()
-	            .key(function(d) { 
-	                // Validate that origin and destination are not the same and commodity code matches
-	                // Commodity is hardcoded for testing purposes
-	                // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
-	                if (d.sctg2 == commodity) {
-	                    return d.dms_orig;
-	                }
-	            })
-	            // Sums up tons_2015 for a specific good in a specific origin state
-	            .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015; }); })
-	            .entries(data);
-	        export_totals.pop();
-	        // console.log(export_totals);
-	        var import_totals
-	        d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
-	            var import_totals = d3.nest()
-	                .key(function(d) { 
-	                    // Validate that origin and destination are not the same and commodity code matches
-	                    // Commodity is hardcoded for testing purposes
-	                    // if ( d.dms_orig != d.dms_dest && d.sctg2 == commodity) {
-	                    if (d.sctg2 == commodity) {
-	                        return d.dms_dest;
-	                    }
-	                })
-	                // Sums up tons_2015 for a specific good in a specific origin state
-	                .rollup(function(v) { return d3.sum(v, function(d) { return d.tons_2015 * -1; }); })
-	                .entries(data);
-	            import_totals.pop();
-	            // console.log(import_totals);
+    d3.json('./data/us.json', function(error, us) {
+        svg.selectAll('.states')
+            .data(topojson.feature(us, us.objects.usStates).features)
+            .enter()
+            .append('path')
+            .attr('class', 'states')
+            .attr('d', path)
+    });
 
-	            x.domain([d3.min(import_totals, function(d) { return d.values; }), d3.max(export_totals, function(d) { return d.values; })]).nice();
-	            y.domain(data.map(function(d) { return d.dms_orig; }));
-	            // console.log(d3.min(import_totals, function(d) { return d.values; }));
-	            // console.log(d3.max(export_totals, function(d) { return d.values; }));
+    var combined = [];
+    var lookup = [];
+    var positions = [];
 
-	            var combined = export_totals.concat(import_totals);
+    d3.csv("./data/state_data.csv", function(error, data){
+        data.forEach(function(d){
+            combined.push({state_num: d.state, state_name: d.context, export_total: 0.0, import_total: 0.0, intrastate_total: 0.0});
+            lookup.push(d.state);
+            positions.push(projection([d.longitude, d.latitude]));
+        });
+    });
 
-	            svg.selectAll(".bar")
-	                .data(combined)
-	                .enter()
-	                .append("rect")
-	                .attr("class", function(d) { return "bar bar_" + (d.values < 0 ? "negative" : "positive"); })
-	                .attr("x", function(d) { return x(Math.min(0, d.values)); })
-	                .attr("y", function(d) { return y(d.key); })
-	                .attr("width", function(d) { return Math.abs(x(d.values) - x(0)); })
-	                .attr("height", y.rangeBand());
+    d3.csv("./data/faf_commodity_data_dom_only.csv", function(error, data) {
+        data.forEach(function(d){
+            if(d.sctg2 == commodity){
+                if(d.dms_orig != d.dms_dest){
+                    combined[lookup.indexOf(d.dms_orig)].export_total += Number(d.tons_2015);
+                    combined[lookup.indexOf(d.dms_dest)].import_total += Number(d.tons_2015);
+                } else {
+                    combined[lookup.indexOf(d.dms_orig)].intrastate_total += Number(d.tons_2015);
+                }
+            }
+        });
 
-	            svg.append("g")
-	                .attr("class", "x axis")
-	                .attr("transform", "translate(0," + height + ")")
-	                .attr("class", "bar_text")
-	                .call(xAxis);
-
-	            svg.append("g")
-	                .attr("class", "y axis")
-	                .attr("transform", "translate(" + x(0) + ",0)")
-	                .call(yAxis);
-	        });
-	    });
+        svg.selectAll("circle_pos")
+            .data(combined)
+            .enter()
+            .append("circle")
+            .attr("class", "bar bar_positive")
+            .attr("cx", function(d, i) { return positions[i][0]; })
+            .attr("cy", function(d, i) { return positions[i][1]; })
+            .attr("r", function(d) { return Math.sqrt(d.export_total / 15); });
+        
+        svg.selectAll("circle_neg")
+            .data(combined)
+            .enter()
+            .append("circle")
+            .attr("class", "bar bar_negative")
+            .attr("cx", function(d, i) { return positions[i][0]; })
+            .attr("cy", function(d, i) { return positions[i][1]; })
+            .attr("r", function(d) { return Math.sqrt(d.import_total / 15); });
+    });
 }
 
 d3.select(window)
   .on("resize", function() {
-    dispCommData(d3.select("#comm_data_drop_menu").property("value"));
+      dispCommData(d3.select("#comm_data_drop_menu").property("value"));
   });
