@@ -25,6 +25,8 @@ html, body {
 	width: 100%;
 	height: 100%;
 
+	overflow: hidden;
+
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -93,7 +95,7 @@ html, body {
 }
 
 .toolbar_item{
-	background: cornflowerblue;
+	background: #b7c7cc;
 
 	padding: 1vh;
 }
@@ -129,7 +131,7 @@ html, body {
 
 #comm_data_bar{
 	justify-content: center;
-	background: lightgray;
+	background: #b7c7cc;
 }
 
 .box {
@@ -174,4 +176,70 @@ div.tooltip {
     border: 0px;		
     border-radius: 3px;			
     pointer-events: none;			
+}
+
+#legend_container{
+	background:#555;
+	display:flex;
+	flex-direction: column;
+	padding: 1vh;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+	text-align: center;
+
+	position:fixed;
+	bottom:60px;
+	right:60px;
+	box-shadow: #000;
+}
+
+#legend_title{
+	background: #fff;
+	display:flex;
+	flex-direction: column;
+	padding: 1vh;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+	text-align: center;
+	font-family: 'Comfortaa', cursive;
+	font-size: 10;
+}
+
+#legend_box{
+	background: #fff;
+	display:flex;
+	flex-direction: column;
+	padding: 1vh;
+
+	width: 100px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+	text-align: center;
+	font-family: 'Comfortaa', cursive;
+	font-size: 10;
+}
+
+#leg_box_pos{
+	margin-bottom: 1vh;
+}
+
+.leg_info_box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leg_svg{
+	margin-left: 5px;
+	height: 20px;
+	width: 20px;
 }

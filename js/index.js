@@ -88,10 +88,21 @@ function dispCommData(d) {
     // console.log(d);
     var commodity = d;
 
-    var pre_svg = d3.select("#data_div").select("#comm_data_bar")
+    var pre_svg = d3.select("#data_div").select("#comm_data_bar");
 
     if(typeof pre_svg !== "undefined" || pre_svg !== null) {
       pre_svg.remove();
+    }
+
+    // For Legend creation
+    var leg_svg_pos = d3.select("#leg_svg_pos");
+    var leg_svg_neg = d3.select("#leg_svg_neg");
+
+    if(typeof leg_svg_pos !== "undefined" || leg_svg_pos !== null) {
+        leg_svg_pos.remove();
+    }
+    if(typeof leg_svg_neg !== "undefined" || leg_svg_neg !== null) {
+        leg_svg_neg.remove();
     }
 
     var margin = {top: 10, right: 20, bottom: 10, left: 20},
@@ -204,6 +215,33 @@ function dispCommData(d) {
         .duration(500)
         .style("opacity", 0);
     }
+
+    var leg_width = (document.getElementById("legend_box").offsetWidth) -60,
+    leg_height = (document.getElementById("legend_box").offsetHeight) - 60;
+
+    d3.select("#leg_box_pos")
+    .append("svg")
+    .attr("id", "leg_svg_pos")
+    .attr("class", "leg_svg")
+    .append("circle")
+    .style("pointer-events", "none")
+    .attr("id", "leg_circle_pos")
+    .attr("class", "bar bar_positive")
+    .attr("cx", 10)
+    .attr("cy", 10)
+    .attr("r", function(d) { return 9; });
+
+    d3.select("#leg_box_neg")
+    .append("svg")
+    .attr("id", "leg_svg_neg")
+    .attr("class", "leg_svg")
+    .append("circle")
+    .style("pointer-events", "none")
+    .attr("id", "leg_circle_neg")
+    .attr("class", "bar bar_negative")
+    .attr("cx", 10)
+    .attr("cy", 10)
+    .attr("r", function(d) { return 9; });
 }
 
 function findObjectByKey(array, key, value) {
