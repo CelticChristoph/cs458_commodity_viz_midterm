@@ -1,6 +1,12 @@
 # CS458 - Commodity Visualization Midterm Project
 Source code for the CS458 Information Visualization midterm project.
-Found at: https://github.com/CelticChristoph/cs458_commodity_viz_midterm
+Found at: https://github.com/CelticChristoph/cs458_commodity_viz
+
+---
+To view the visualization online:
+---
+http://web.engr.oregonstate.edu/~metzschs/cs458/cs458_commodity_viz_midterm/
+
 ---
 To run:
 ---
@@ -21,10 +27,4 @@ To run:
 7. Use the selection bar at the top of the screen to pick the commodity that you're interested in.
 ---
 
-Contributions can be checked at: https://github.com/CelticChristoph/cs458_commodity_viz_midterm/graphs/contributors
-Both members feel that contributions were evenly shared. If there are questions regarding this, we can gladly explain in person.
 
-A "broken" version of the website can be seen at: http://web.engr.oregonstate.edu/~carlsenc/cs458_midterm/
-
-Unfortunately the server (even with permissions set) appears to not allow us to host it there properly.
-Because of this, we will gladly demo the project if necessary.
